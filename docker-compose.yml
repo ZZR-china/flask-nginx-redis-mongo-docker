@@ -1,0 +1,28 @@
+web:
+    build: ./web
+    command: python -u ./web/app.py
+    ports:
+        - "5000:5000"
+    volumes:
+        - .:/flask_compose
+    links:
+        - mongo
+        - redis
+
+nginx:
+    restart: always
+    build: ./nginx
+    ports:
+        - "80:80"
+    volumes:
+      - /www/static
+    volumes_from:
+      - web
+    links:
+      - web:web
+
+mongo:
+    image: mongo:3.0.2
+
+redis:
+    image: redis
